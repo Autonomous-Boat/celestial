@@ -1,5 +1,3 @@
-// convert socket.io to fastify 4.15.0
-
 import fastifyPlugin from "fastify-plugin";
 import { Server } from "socket.io";
 

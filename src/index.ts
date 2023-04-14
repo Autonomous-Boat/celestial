@@ -1,5 +1,7 @@
-import fastify from "fastify";
 import fastifySocketIO from "./fastifyPlugins/socketio.ts";
+
+import fastify from "fastify";
+import fastifySensible from "@fastify/sensible";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -25,10 +27,11 @@ const app = fastify({
 });
 
 app.register(fastifySocketIO);
+app.register(fastifySensible);
 
 process.on("beforeExit", async () => {
   await app.close();
-})
+});
 
 app.listen({ port: PORT, host: ADDRESS, exclusive: true }).catch((err) => {
   app.log.error(err);

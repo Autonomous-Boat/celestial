@@ -1,10 +1,6 @@
 import fastify from "fastify";
-import fastifySocketio from "fastify-socket.io";
+import fastifySocketIO from "./fastifyPlugins/socketio.ts";
 import dotenv from "dotenv";
-
-function randomInt(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
 
 dotenv.config();
 
@@ -28,7 +24,7 @@ const app = fastify({
   logger: LOGGING[process.env.ENVIRONMENT] ?? true,
 });
 
-app.register(fastifySocketio);
+app.register(fastifySocketIO);
 
 process.on("beforeExit", async () => {
   await app.close();
@@ -40,3 +36,4 @@ app.listen({ port: PORT, host: ADDRESS, exclusive: true }).catch((err) => {
 });
 
 // https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html
+// https://www.fastify.io/docs/latest/Reference/TypeScript/

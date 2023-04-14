@@ -1,15 +1,26 @@
+import { FastifyPluginAsync } from "fastify";
 import fastifyPlugin from "fastify-plugin";
-import { Server } from "socket.io";
+import { Server, ServerOptions } from "socket.io";
 
-export default fastifyPlugin(async (app, opts) => {
-    const io: Server = new Server(app.server, opts);
+export interface FastifySocketIOOptions extends ServerOptions {};
 
-    app.decorate("io", io);
-    app.addHook("onClose", (_, done) => {
-        io.close();
-        done();
-    });
-}, {
-    fastify: ">=4.x",
-    name: "fastifySocketio",
+declare module "fastify" {
+    interface FastifyInstance {
+        io: Server;
+    }
+}
+
+const plugin: FastifyPluginAsync<FastifySocketIOOptions> = async (fastify, options) => {
+  const io: Server = new Server(fastify.server, options);
+
+  fastify.decorate("io", io);
+  fastify.addHook("onClose", (_, done) => {
+    io.close();
+    done();
+  });
+};
+
+export default fastifyPlugin(plugin, {
+    fastify: "4.x",
+    name: "fastify-socketio",
 });

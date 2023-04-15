@@ -1,16 +1,20 @@
+// Imports
 import { FastifyPluginAsync } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 import { Server, ServerOptions } from "socket.io";
 
-export interface FastifySocketIOOptions extends ServerOptions {};
+export interface FastifySocketIOOptions extends ServerOptions {}
 
 declare module "fastify" {
-    interface FastifyInstance {
-        io: Server;
-    }
+  interface FastifyInstance {
+    io: Server;
+  }
 }
 
-const plugin: FastifyPluginAsync<FastifySocketIOOptions> = async (fastify, options) => {
+const plugin: FastifyPluginAsync<FastifySocketIOOptions> = async (
+  fastify,
+  options
+) => {
   const io: Server = new Server(fastify.server, options);
 
   fastify.decorate("io", io);
@@ -21,6 +25,6 @@ const plugin: FastifyPluginAsync<FastifySocketIOOptions> = async (fastify, optio
 };
 
 export default fastifyPlugin(plugin, {
-    fastify: "4.x",
-    name: "fastify-socketio",
+  fastify: "4.x",
+  name: "fastify-socketio",
 });
